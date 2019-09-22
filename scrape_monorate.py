@@ -16,7 +16,7 @@ import collections as cl
 import traceback
 import os
 
-version = 'index_monorate(NoDocker)_2.2'
+version = 'index_monorate(NoDocker)_2.3'
 
 #Slackに出力
 def print_slack(message):
@@ -103,7 +103,6 @@ def analyze_html(html):
     soup_1page_list = soup_all.select("section[class='search_item_list_section']")
 
     # 403用
-    print(soup_all.title.string)
     if soup_all.title.string == '403 Forbidden':
         res_is_403 = True
         print_slack('> 403 sleep')
@@ -134,16 +133,20 @@ def analyze_html(html):
         soup_reference_price = soup_1iteminfo.select_one("span[class='_reference_price_color price']")
 
         item_info = {
-            'title_str'    : soup_title.string.strip() if (soup_title is not None) else '',
-            'item_link'    : soup_title['href'],
-            'image_link'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
-            'caution_list' : caution_list,
-            'release_date' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
-            'category_str' : soup_category.string.strip() if (soup_category is not None) else '',
-            'rank_num'     : soup_rank.string.strip() if (soup_rank is not None) else '',
-            'reference_yen': soup_reference_price.string.replace('￥','').strip() if (soup_reference_price is not None) else '',
-            'scrape_date'  : datetime.date.today().isoformat()
+            'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else '',
+            'Monorate': {
+                'Title'    : soup_title.string.strip() if (soup_title is not None) else '',
+                'URL'    : soup_title['href'],
+                'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
+                'CautionList' : caution_list,
+                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
+                'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
+                'Rank'     : soup_rank.string.strip() if (soup_rank is not None) else '',
+                'ReferencePrise': soup_reference_price.string.replace('￥','').strip() if (soup_reference_price is not None) else '',
+                'AcquisitionDate'  : datetime.date.today().isoformat()
+            }
         }
+        print(item_info)
         item_infos.append(item_info)
 
     return item_infos, nextpage_is_exist, res_is_403
