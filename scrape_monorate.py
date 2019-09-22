@@ -14,8 +14,9 @@ import random # 組み込み
 import datetime # 組み込み
 import collections as cl
 import traceback
+import os
 
-version = 2.2
+version = 'index_monorate(NoDocker)_2.2'
 
 #Slackに出力
 def print_slack(message):
@@ -39,7 +40,7 @@ def create_driver(driver):
     # Firefox用
     options = FirefoxOptions()
     options.add_argument('-headless')
-    driver = Firefox(options=options)
+    driver = Firefox(options=options, log_path=os.path.devnull)
 
     # Docker用
     # driver = webdriver.Remote(
@@ -210,7 +211,7 @@ def main():
                     if not nextpage_is_exist:
                         break
                 #filepath = '/dev/shm/'
-                filepath = './results/'
+                filepath = './result/'
                 filename = f'{category}_{h}.json'
                 with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
                     [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
