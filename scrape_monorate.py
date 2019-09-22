@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-from bs4 import BeautifulSoup # pip install bs4
-from selenium import webdriver # pip install selenium
+from bs4 import BeautifulSoup # pip3 install bs4
+from selenium import webdriver # pip3 install selenium
 #from selenium.webdriver.chrome.options import Options # 同上
 from selenium.webdriver import Firefox, FirefoxOptions
 #from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-#import chromedriver_binary # pip install chromedriver_binary
+#import chromedriver_binary # pip3 install chromedriver_binary
 from urllib import request, parse # 組み込み
-import requests # pip install requests
+import requests # pip3 install requests
+from pymongo import MongoCliant # pip3 install pymongo
 import json # 組み込み
 import subprocess # 組み込み
 import time # 組み込み
@@ -26,6 +27,17 @@ def print_slack(message):
     if isinstance(message, list):
         message = [json.dumps(m,indent=4,ensure_ascii=False) for m in message]
     requests.post(webhook_url, data=json.dumps({'text': message}))
+
+
+class MongoAccess(object):
+
+    def __init__(self):
+        self.clint = MongoClient()
+        self.db = self.clint['test']
+
+    def add_one(self, post):
+        return self.db.test.insert_one(post)
+
 
 # ブラウザを起動
 def create_driver(driver):
@@ -132,6 +144,7 @@ def analyze_html(html):
         soup_rank = soup_1iteminfo.select_one("span[class='_ranking_item_color']")
         soup_reference_price = soup_1iteminfo.select_one("span[class='_reference_price_color price']")
 
+        # ASIN CautionList Rank
         item_info = {
             'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else '',
             'Monorate': {
@@ -152,19 +165,19 @@ def analyze_html(html):
     return item_infos, nextpage_is_exist, res_is_403
 
 #CPU温度計測
-def get_cpu_temp():
-    command = 'vcgencmd measure_temp'
-    result = subprocess.Popen(command, shell=True,  stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    rstdout ,rstderr = result.communicate()
-    cpu_temp = rstdout.split()
-    return cpu_temp[0]
+# def get_cpu_temp():
+#     command = 'vcgencmd measure_temp'
+#     result = subprocess.Popen(command, shell=True,  stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+#     rstdout ,rstderr = result.communicate()
+#     cpu_temp = rstdout.split()
+#     return cpu_temp[0]
 
 #ファイルを一時領域からHDDに移動
-def move_file(filepath, filename):
-    pre_json_directory = filepath
-    aft_json_directory = '/root/script/results/'
-    cmd1 = f'mv -f {pre_json_directory}{filename} {aft_json_directory}{filename}'
-    subprocess.call(cmd1.split())
+# def move_file(filepath, filename):
+#     pre_json_directory = filepath
+#     aft_json_directory = '/root/script/results/'
+#     cmd1 = f'mv -f {pre_json_directory}{filename} {aft_json_directory}{filename}'
+#     subprocess.call(cmd1.split())
 
 # main
 def main():
@@ -186,6 +199,8 @@ def main():
 
     try:
         driver = create_driver(driver)
+        mongo = MongoAccess()
+
         for category in item_categories:
             rank_range = {
                 'min': 1,
@@ -213,11 +228,13 @@ def main():
                     time.sleep((random.random())/2+1)
                     if not nextpage_is_exist:
                         break
+                # ファイル保存（今回はMongoDB使う）
                 #filepath = '/dev/shm/'
-                filepath = './result/'
-                filename = f'{category}_{h}.json'
-                with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
-                    [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
+                # filepath = './result/'
+                # filename = f'{category}_{h}.json'
+                # with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
+                #     [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
+                [obj.add_one(ii) for ii in item_info_list]
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
