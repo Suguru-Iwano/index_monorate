@@ -7,7 +7,7 @@ from selenium.webdriver import Firefox, FirefoxOptions
 #import chromedriver_binary # pip3 install chromedriver_binary
 from urllib import request, parse # 組み込み
 import requests # pip3 install requests
-from pymongo import MongoCliant # pip3 install pymongo
+from pymongo import MongoClient # pip3 install pymongo
 import json # 組み込み
 import subprocess # 組み込み
 import time # 組み込み
