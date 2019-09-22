@@ -234,7 +234,7 @@ def main():
                 # filename = f'{category}_{h}.json'
                 # with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
                 #     [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
-                [obj.add_one(ii) for ii in item_info_list]
+                [mongo.add_one(ii) for ii in item_info_list]
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
