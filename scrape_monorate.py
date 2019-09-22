@@ -207,7 +207,7 @@ def main():
                         item_infos, nextpage_is_exist, res_is_403 = analyze_html(html)
                     [item_info_list.append(ii) for ii in item_infos]
                     # Bot認識阻害?
-                    time.sleep((random.random())/2)
+                    time.sleep((random.random())/2+1)
                     if not nextpage_is_exist:
                         break
                 #filepath = '/dev/shm/'
