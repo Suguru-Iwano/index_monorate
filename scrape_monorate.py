@@ -151,11 +151,11 @@ def analyze_html(html):
                 'URL'    : soup_title['href'],
                 'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
                 'CautionList' : caution_list,
-                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip().isoformat() if (soup_releasedate is not None) else '',
+                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
                 'ReferencePrise': int(soup_reference_price.string.replace('￥','').replace(',', '').strip()) if (soup_reference_price is not None) else '',
-                'AcquisitionDate'  : datetime.date.today().isoformat()
+                'AcquisitionDate'  : datetime.date.today()
             }
         }
         print(item_info)
