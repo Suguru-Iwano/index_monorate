@@ -33,11 +33,10 @@ class MongoAccess(object):
 
     def __init__(self):
         self.clint = MongoClient()
-        self.db = self.clint['test']
+        self.db = self.clint['amz']
 
-    def add_one(self, post):
-        return self.db.test.insert_one(post)
-
+    def upsert_one(self, post):
+        self.db.amz.update( { ASIN:'B0012NGQS4'}, post, { upsert:true })
 
 # ブラウザを起動
 def create_driver(driver):
@@ -152,10 +151,10 @@ def analyze_html(html):
                 'URL'    : soup_title['href'],
                 'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
                 'CautionList' : caution_list,
-                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
+                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip().isoformat() if (soup_releasedate is not None) else '',
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
-                'Rank'     : soup_rank.string.strip() if (soup_rank is not None) else '',
-                'ReferencePrise': soup_reference_price.string.replace('￥','').strip() if (soup_reference_price is not None) else '',
+                'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
+                'ReferencePrise': int(soup_reference_price.string.replace('￥','').replace(',', '')strip()) if (soup_reference_price is not None) else '',
                 'AcquisitionDate'  : datetime.date.today().isoformat()
             }
         }
@@ -234,7 +233,7 @@ def main():
                 # filename = f'{category}_{h}.json'
                 # with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
                 #     [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
-                [mongo.add_one(ii) for ii in item_info_list]
+                [mongo.upsert_one(ii) for ii in item_info_list]
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
