@@ -142,6 +142,11 @@ def analyze_html(html):
         soup_category = soup_1iteminfo.select_one("span[class='data_category']")
         soup_rank = soup_1iteminfo.select_one("span[class='_ranking_item_color']")
         soup_reference_price = soup_1iteminfo.select_one("span[class='_reference_price_color price']")
+        ReferencePrise=0
+        try:
+            ReferencePrise = int(soup_reference_price.string.replace('￥','').replace(',', '').strip()) if (soup_reference_price is not None) else ''
+        except:
+            ReferencePrise = ""
 
         # ASIN CautionList Rank
         item_info = {
@@ -154,7 +159,7 @@ def analyze_html(html):
                 'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
-                'ReferencePrise': int(soup_reference_price.string.replace('￥','').replace(',', '').strip()) if (soup_reference_price is not None) else '',
+                'ReferencePrise': ReferencePrise
                 'AcquisitionDate'  : datetime.date.today()
             }
         }
