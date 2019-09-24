@@ -159,7 +159,7 @@ def analyze_html(html):
                 'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
-                'ReferencePrise': ReferencePrise
+                'ReferencePrise': ReferencePrise,
                 'AcquisitionDate'  : datetime.date.today()
             }
         }
