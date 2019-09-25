@@ -157,7 +157,7 @@ def analyze_html(html):
                 'URL'    : soup_title['href'],
                 'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
                 'CautionList' : caution_list,
-                'ReleaseDate' : ReleaseDate
+                'ReleaseDate' : ReleaseDate,
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
                 'ReferencePrise': ReferencePrise,
