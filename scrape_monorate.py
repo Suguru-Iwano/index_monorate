@@ -44,7 +44,7 @@ def create_driver(driver):
         try:
             driver.quit()
         except:
-
+            print('Exception at driver.quit()')
         driver = None
 
     # Chromedriver用
