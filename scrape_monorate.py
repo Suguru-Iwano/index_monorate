@@ -61,7 +61,6 @@ def create_driver(driver):
     # driver = webdriver.Remote(
     # command_executor='http://selenium-hub:4444/wd/hub',
     # desired_capabilities=DesiredCapabilities.CHROME)
-    print('> driver is started')
     print_slack('> driver is started')
     return driver
 
@@ -93,7 +92,6 @@ def get_html_forsoup(url, driver=None):
             driver.get(url)
             html = driver.page_source.encode('utf-8')
         res_is_None = False
-        print('> accessed : ',url)
     except:
         res_is_None = True
         print_slack('> none ress sleep')
