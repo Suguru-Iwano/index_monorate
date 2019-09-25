@@ -40,8 +40,9 @@ class MongoAccess(object):
 
 # ブラウザを起動
 def create_driver(driver):
-    #if driver is not None:
-    #    driver.quit()
+    if driver is not None:
+        driver.quit()
+        driver = None
 
     # Chromedriver用
     # options = webdriver.ChromeOptions()
@@ -228,8 +229,8 @@ def main():
                         while res_is_None:
                             html, res_is_None = get_html_forsoup(url, driver)
                             # dockerだとエラーになるよ！
-                            # if res_is_None:
-                            #     driver = create_driver(driver)
+                            if res_is_None:
+                                driver = create_driver(driver)
                         item_infos, nextpage_is_exist, res_is_403 = analyze_html(html)
                     [item_info_list.append(ii) for ii in item_infos]
                     # Bot認識阻害?
