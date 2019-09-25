@@ -33,10 +33,10 @@ class MongoAccess(object):
 
     def __init__(self):
         self.clint = MongoClient()
-        self.db = self.clint['test']
+        self.db = self.clint['amz']
 
     def upsert_one(self, post):
-        self.db.test.update_one({'ASIN':post['ASIN']}, {'$set':post}, True)
+        self.db.amz.update_one({'ASIN':post['ASIN']}, {'$set':post}, True)
 
 # ブラウザを起動
 def create_driver(driver):
@@ -148,6 +148,7 @@ def analyze_html(html):
         except:
             ReferencePrise = ""
 
+        ReleaseDate = datetime.date.fromisoformat(soup_releasedate.string.replace('発売','').strip()) if (soup_releasedate is not None) else '',
         # ASIN CautionList Rank
         item_info = {
             'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else '',
@@ -156,7 +157,7 @@ def analyze_html(html):
                 'URL'    : soup_title['href'],
                 'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
                 'CautionList' : caution_list,
-                'ReleaseDate' : soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else '',
+                'ReleaseDate' : ReleaseDate
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
                 'ReferencePrise': ReferencePrise,
