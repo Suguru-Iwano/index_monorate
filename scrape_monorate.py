@@ -36,7 +36,7 @@ class MongoAccess(object):
         self.db = self.clint['test']
 
     def upsert_one(self, post):
-        self.db.test.update_one({'ASIN':'B0012NGQS4'}, {'$set':post}, True)
+        self.db.test.update_one({'ASIN':post['ASIN']}, {'$set':post}, True)
 
 # ブラウザを起動
 def create_driver(driver):
