@@ -208,6 +208,8 @@ def main():
 
     try:
         driver = create_driver(driver)
+        driver = create_driver(driver)
+        driver = create_driver(driver)
         mongo = MongoAccess()
 
         for category in item_categories:
