@@ -33,10 +33,10 @@ class MongoAccess(object):
 
     def __init__(self):
         self.clint = MongoClient()
-        self.db = self.clint['amz']
+        self.db = self.clint['test']
 
     def upsert_one(self, post):
-        self.db.amz.update( { ASIN:'B0012NGQS4'}, post, { upsert:true })
+        self.db.test.update_one({ ASIN:'B0012NGQS4'}, post, { upsert:true })
 
 # ブラウザを起動
 def create_driver(driver):
