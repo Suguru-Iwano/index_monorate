@@ -148,7 +148,10 @@ def analyze_html(html):
         except:
             ReferencePrise = ""
 
-        ReleaseDate = datetime.date.fromisoformat(soup_releasedate.string.replace('発売','').strip()) if        (soup_releasedate is not None and soup_releasedate != '') else ''
+        ReleaseDate = soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else ''
+        if ReleaseDate != '':
+            ReleaseDate = datetime.date.fromisoformat(ReleaseDate)
+
         # ASIN CautionList Rank
         item_info = {
             'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else '',
