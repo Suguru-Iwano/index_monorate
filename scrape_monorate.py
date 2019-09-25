@@ -160,7 +160,7 @@ def analyze_html(html):
                 'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
                 'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
                 'ReferencePrise': ReferencePrise,
-                'AcquisitionDate'  : datetime.date.today()
+                'AcquisitionDate'  : datetime.datetime.today()
             }
         }
         print(item_info)
