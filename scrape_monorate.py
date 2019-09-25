@@ -41,7 +41,10 @@ class MongoAccess(object):
 # ブラウザを起動
 def create_driver(driver):
     if driver is not None:
-        driver.quit()
+        try:
+            driver.quit()
+        except:
+
         driver = None
 
     # Chromedriver用
@@ -95,7 +98,7 @@ def get_html_forsoup(url, driver=None):
         res_is_None = True
         print_slack('> none ress sleep')
         print_slack(traceback.format_exc())
-        time.sleep(random.random()*5000)
+        time.sleep(random.random()*4000)
         #time.sleep(2)
 
     return html, res_is_None
@@ -118,11 +121,11 @@ def analyze_html(html):
     if soup_all.title.string == '403 Forbidden':
         res_is_403 = True
         print_slack('> 403 sleep')
-        time.sleep(random.random()*5000)
+        time.sleep(random.random()*4000)
     # if len(soup_1page_list) == 0:
     #     res_is_403 = True
     #     print_slack('> 403 sleep')
-    #     time.sleep(random.random()*5000)
+    #     time.sleep(random.random()*4000)
         #time.sleep(2)
 
     # ページ内の商品情報でループ
@@ -207,8 +210,6 @@ def main():
     # chromedriver は、途中終了でプロセスが残ってしまうため
 
     try:
-        driver = create_driver(driver)
-        driver = create_driver(driver)
         driver = create_driver(driver)
         mongo = MongoAccess()
 
