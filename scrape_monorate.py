@@ -150,7 +150,7 @@ def analyze_html(html):
 
         ReleaseDate = soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else ''
         if ReleaseDate != '':
-            ReleaseDate = datetime.date.fromisoformat(ReleaseDate)
+            ReleaseDate = datetime.datetime.fromisoformat(ReleaseDate)
 
         # ASIN CautionList Rank
         item_info = {
