@@ -41,6 +41,16 @@ class MongoAccess(object):
     def upsert_one(self, post):
         self.db.amz.update_one({'ASIN':post['ASIN']}, {'$set':post}, True)
 
+
+# 辞書から値がNoneのキーを削除
+# 今回は使わない（Noneの列は消さない！）
+def deletedic_ifnone(dic):
+    for k, v in dic.items():
+        if v is None:
+            del(dic[k])
+    return dic
+
+
 # ブラウザを起動
 def create_driver(driver):
     if driver is not None:
