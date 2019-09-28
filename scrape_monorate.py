@@ -17,7 +17,7 @@ import collections as cl
 import traceback
 import os
 
-version = 'index_monorate(NoDocker)_2.3'
+version = 'index_monorate(NoDocker)_2.4'
 
 #Slackに出力
 def print_slack(message):
@@ -101,6 +101,15 @@ def get_html_forsoup(url, driver=None):
 
     return html, res_is_None
 
+
+# 文字列をISOに変換
+def encode_iso(str_date):
+    try:
+        return datetime.datetime.fromisoformat(str_date)
+    except:
+        return None
+
+
 # HTMLを解析
 def analyze_html(html):
 
@@ -143,28 +152,28 @@ def analyze_html(html):
         soup_releasedate = soup_1iteminfo.select_one("div > span[class='item_date']")
         soup_category = soup_1iteminfo.select_one("span[class='data_category']")
         soup_rank = soup_1iteminfo.select_one("span[class='_ranking_item_color']")
+
         soup_reference_price = soup_1iteminfo.select_one("span[class='_reference_price_color price']")
         ReferencePrise=0
         try:
-            ReferencePrise = int(soup_reference_price.string.replace('￥','').replace(',', '').strip()) if (soup_reference_price is not None) else ''
+            ReferencePrise = int(soup_reference_price.string.replace('￥','').replace(',', '').strip()) if (soup_reference_price is not None) else None
         except:
-            ReferencePrise = ""
+            ReferencePrise = None
 
-        ReleaseDate = soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else ''
-        if ReleaseDate != '':
-            ReleaseDate = datetime.datetime.fromisoformat(ReleaseDate)
+        str_release_date = soup_releasedate.string.replace('発売','').strip() if (soup_releasedate is not None) else ''
+        iso_release_date = encode_iso(str_release_date)
 
         # ASIN CautionList Rank
         item_info = {
-            'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else '',
+            'ASIN' : soup_title['href'].split('/')[-1] if (soup_title['href'] is not None) else None,
             'Monorate': {
-                'Title'    : soup_title.string.strip() if (soup_title is not None) else '',
+                'Title'    : soup_title.string.strip() if (soup_title is not None) else None,
                 'URL'    : soup_title['href'],
-                'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else '',
+                'ImageURL'   : soup_image['src'].strip() if (soup_image['src'] is not None) else None,
                 'CautionList' : caution_list,
-                'ReleaseDate' : ReleaseDate,
-                'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else '',
-                'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else '',
+                'ReleaseDate' : iso_release_date,
+                'ProductGroup' : soup_category.string.strip() if (soup_category is not None) else None,
+                'Rank'     : int(soup_rank.string.strip().replace(',', '')) if (soup_rank is not None) else None,
                 'ReferencePrise': ReferencePrise,
                 'AcquisitionDate'  : datetime.datetime.today()
             }
@@ -196,11 +205,11 @@ def main():
     # 全部
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'MusicalInstruments', 'VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'Kitchen', 'PetSupplies', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Toys', 'Hobbies', 'Apparel', 'Shoes', 'Jewelry', 'Watches', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     # 規制少ない
-    item_categories = ['MusicalInstruments', 'VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
+    #item_categories = ['MusicalInstruments', 'VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     # 規制多い
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'Kitchen', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Shoes', 'Jewelry', 'Watches']
-    # テスト
-    #item_categories = ['MusicalInstruments']
+    # 今回
+    item_categories = ['VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     max_rank_num = 80000
     #rank_roop_num = 200
     rank_roop_num = 40
