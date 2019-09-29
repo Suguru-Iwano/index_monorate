@@ -126,13 +126,16 @@ def encode_iso(str_date):
 # HTMLを解析
 def analyze_html(html):
 
+    item_infos = None
+    nextpage_is_exist = False
+    res_is_403 = False
+
     soup_all = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
     # 次へボタン検索用
     str_search_nextpage = "span[class='paging_next'] > a[class='original_link']"
     # 次ページのリンクの有無を判定
     nextpage_is_exist = False if (soup_all.select(str_search_nextpage)) == [] else True
 
-    res_is_403 = False
     # 商品データに整形
     # 1ページ内商品情報のリスト検索
     soup_1page_list = soup_all.select("section[class='search_item_list_section']")
