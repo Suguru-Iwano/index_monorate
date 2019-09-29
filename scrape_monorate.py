@@ -138,10 +138,11 @@ def analyze_html(html):
     soup_1page_list = soup_all.select("section[class='search_item_list_section']")
 
     # 403用
-    if soup_all.title.string == '403 Forbidden':
+    if (soup_all.title is None) or (soup_all.title.string == '403 Forbidden'):
         res_is_403 = True
         print_slack('> 403 sleep')
         time.sleep(random.random()*4000)
+        return item_infos = None, nextpage_is_exist = False, res_is_403 = True
     # if len(soup_1page_list) == 0:
     #     res_is_403 = True
     #     print_slack('> 403 sleep')
@@ -222,7 +223,7 @@ def main():
     # 規制多い
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'Kitchen', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Shoes', 'Jewelry', 'Watches']
     # 今回
-    item_categories = ['VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
+    item_categories = ['Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     max_rank_num = 80000
     #rank_roop_num = 200
     rank_roop_num = 40
