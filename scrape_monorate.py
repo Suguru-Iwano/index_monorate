@@ -142,7 +142,7 @@ def analyze_html(html):
         res_is_403 = True
         print_slack('> 403 sleep')
         time.sleep(random.random()*4000)
-        return item_infos = None, nextpage_is_exist = False, res_is_403 = True
+        return item_infos, nextpage_is_exist, res_is_403
     # if len(soup_1page_list) == 0:
     #     res_is_403 = True
     #     print_slack('> 403 sleep')
