@@ -129,6 +129,7 @@ def analyze_html(html):
     item_infos = None
     nextpage_is_exist = False
     res_is_403 = False
+    res_title_is_None = False
 
     soup_all = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
     # 次へボタン検索用
@@ -140,12 +141,19 @@ def analyze_html(html):
     # 1ページ内商品情報のリスト検索
     soup_1page_list = soup_all.select("section[class='search_item_list_section']")
 
+    # タイトルがない -> 多分、初手の検索結果が0けん
+    if (soup_all.title is None):
+        res_is_403 = False
+        res_title_is_None = True
+        return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
+
     # 403用
-    if (soup_all.title is None) or (soup_all.title.string == '403 Forbidden'):
+    if (soup_all.title.string == '403 Forbidden'):
         res_is_403 = True
+        res_title_is_None = False
         print_slack('> 403 sleep')
         time.sleep(random.random()*4000)
-        return item_infos, nextpage_is_exist, res_is_403
+        return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
     # if len(soup_1page_list) == 0:
     #     res_is_403 = True
     #     print_slack('> 403 sleep')
@@ -198,7 +206,7 @@ def analyze_html(html):
         print(item_info)
         item_infos.append(item_info)
 
-    return item_infos, nextpage_is_exist, res_is_403
+    return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
 
 #CPU温度計測
 # def get_cpu_temp():
@@ -251,14 +259,15 @@ def main():
 
                     url = make_url_forsearch(base_url, category, rank_range, count_num)
                     res_is_403 = True
-                    while res_is_403:
+                    res_title_is_None = False
+                    while res_is_403 and not res_title_is_None:
                         res_is_None = True
                         while res_is_None:
                             html, res_is_None = get_html_forsoup(url, driver)
                             # dockerだとエラーになるよ！
                             if res_is_None:
                                 driver = create_driver(driver)
-                        item_infos, nextpage_is_exist, res_is_403 = analyze_html(html)
+                        item_infos, nextpage_is_exist, res_is_403, res_title_is_None = analyze_html(html)
                     [item_info_list.append(ii) for ii in item_infos]
                     # Bot認識阻害?
                     time.sleep((random.random())/2+1)
