@@ -145,6 +145,7 @@ def analyze_html(html):
     if (soup_all.title is None):
         res_is_403 = False
         res_title_is_None = True
+        time.sleep(random.random()*2)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
 
     # 403用
@@ -234,7 +235,7 @@ def main():
     # 規制多い
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'Kitchen', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Shoes', 'Jewelry', 'Watches']
     # 今回
-    item_categories = ['Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
+    item_categories = ['PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     max_rank_num = 80000
     #rank_roop_num = 200
     rank_roop_num = 40
