@@ -24,7 +24,7 @@ SCRAPE_VERSION = 'index_monorate(NoDocker)_2.5'
 
 #Slackに出力
 def print_slack(message):
-    webhook_url = 'https://hooks.slack.com/services/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'
+    webhook_url = 'https://hooks.slack.com/services/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'
     if isinstance(message, dict):
         message = json.dumps(message,indent=4,ensure_ascii=False)
     if isinstance(message, list):
