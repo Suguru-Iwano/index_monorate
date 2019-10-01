@@ -20,11 +20,11 @@ import collections as cl
 import traceback
 import os
 
-version = 'index_monorate(NoDocker)_2.4'
+SCRAPE_VERSION = 'index_monorate(NoDocker)_2.5'
 
 #Slackに出力
 def print_slack(message):
-    webhook_url = 'https://hooks.slack.com/services/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'
+    webhook_url = 'https://hooks.slack.com/services/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'
     if isinstance(message, dict):
         message = json.dumps(message,indent=4,ensure_ascii=False)
     if isinstance(message, list):
@@ -75,6 +75,7 @@ def create_driver(driver):
     # command_executor='http://selenium-hub:4444/wd/hub',
     # desired_capabilities=DesiredCapabilities.CHROME)
     print_slack('> driver is started')
+    print('> driver is started')
     return driver
 
 # 検索URLを生成
