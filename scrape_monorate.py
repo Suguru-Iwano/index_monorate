@@ -126,7 +126,7 @@ def encode_iso(str_date):
 # HTMLを解析
 def analyze_html(html):
 
-    item_infos = None
+    item_infos = []
     nextpage_is_exist = False
     res_is_403 = False
     res_title_is_None = False
@@ -142,9 +142,11 @@ def analyze_html(html):
     soup_1page_list = soup_all.select("section[class='search_item_list_section']")
 
     # タイトルがない -> 多分、初手の検索結果が0けん
+    # だからnextpage_is_exist = False
     if (soup_all.title is None):
         res_is_403 = False
         res_title_is_None = True
+        nextpage_is_exist = False
         time.sleep(random.random()*2)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
 
@@ -152,6 +154,7 @@ def analyze_html(html):
     if (soup_all.title.string == '403 Forbidden'):
         res_is_403 = True
         res_title_is_None = False
+        nextpage_is_exist = True
         print_slack('> 403 sleep')
         time.sleep(random.random()*4000)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
@@ -162,7 +165,6 @@ def analyze_html(html):
         #time.sleep(2)
 
     # ページ内の商品情報でループ
-    item_infos = []
     for section in soup_1page_list:
         # １商品を検索
         soup_1iteminfo = section.select_one("ul[class='search_item_list']")
