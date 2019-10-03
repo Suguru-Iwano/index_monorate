@@ -3,6 +3,7 @@
 # 検索条件を確認してね！！
 
 from mymodule import get_config_json as get_conf
+import domongo
 
 from bs4 import BeautifulSoup # pip3 install bs4
 from selenium import webdriver # pip3 install selenium
@@ -32,16 +33,6 @@ def print_slack(message):
     if isinstance(message, list):
         message = [json.dumps(m,indent=4,ensure_ascii=False) for m in message]
     requests.post(webhook_url, data=json.dumps({'text': message}))
-
-
-class MongoAccess(object):
-
-    def __init__(self):
-        self.clint = MongoClient()
-        self.db = self.clint['amz']
-
-    def upsert_one(self, post):
-        self.db.amz.update_one({'ASIN':post['ASIN']}, {'$set':post}, True)
 
 
 # 辞書から値がNoneのキーを削除
@@ -249,7 +240,7 @@ def main():
 
     try:
         driver = create_driver(driver)
-        mongo = MongoAccess()
+        mongo = domongo.MongoAccess()
 
         for category in item_categories:
             rank_range = {
