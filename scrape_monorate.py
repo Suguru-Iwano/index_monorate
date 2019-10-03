@@ -2,6 +2,8 @@
 
 # 検索条件を確認してね！！
 
+from mymodule import get_config_json as get_conf
+
 from bs4 import BeautifulSoup # pip3 install bs4
 from selenium import webdriver # pip3 install selenium
 #from selenium.webdriver.chrome.options import Options # 同上
