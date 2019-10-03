@@ -23,8 +23,8 @@ class MongoAccess(object):
         self.CONFIG = get_conf(self.inifile_name, sample_json)['CONFIG']
 
         clint = MongoClient()
-        self.db = clint[self.CONFIG[USER]]
-        self.collection = self.db.get_collection(collectionName)
+        self.db = clint[self.CONFIG['USER']]
+        self.collection = self.db.get_collection(self.CONFIG['COLLECTION'])
 
     # findするぜ！
     def find():
