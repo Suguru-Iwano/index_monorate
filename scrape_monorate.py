@@ -287,6 +287,7 @@ def main():
         print_slack('> all done!!')
 
     except Exception as e:
+        print(traceback.format_exc())
         print_slack(traceback.format_exc())
         print(traceback.format_exc())
 
