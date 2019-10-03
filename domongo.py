@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from mymodule import get_config_json as get_conf
 
-import pymongo # pip3 install pymongo
+from pymongo import MongoClient # pip3 install pymongo
 
 
 class MongoAccess(object):
