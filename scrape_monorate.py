@@ -102,6 +102,8 @@ def get_html_forsoup(url, driver=None):
         res_is_None = True
         print_slack('> none ress sleep')
         print_slack(traceback.format_exc())
+        print('> none ress sleep')
+        print(traceback.format_exc())
         time.sleep(random.random()*4000)
         #time.sleep(2)
 
@@ -280,11 +282,13 @@ def main():
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
                 print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
+                print(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
                 #move_file(filepath, filename)
         print_slack('> all done!!')
 
     except Exception as e:
         print_slack(traceback.format_exc())
+        print(traceback.format_exc())
 
     finally:
         # ブラウザーを終了
