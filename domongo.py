@@ -27,7 +27,7 @@ class MongoAccess(object):
         self.collection = self.db.get_collection(self.CONFIG['COLLECTION'])
 
     # findするぜ！
-    def find():
+    def find(self):
         pass
 
     # upsertするぜ！
