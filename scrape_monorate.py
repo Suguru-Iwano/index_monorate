@@ -25,7 +25,7 @@ import traceback
 import os
 
 SCRAPE_VERSION = 'index_monorate(NoDocker)_2.5'
-sa = SlackAPI('./conf/slack.ini')
+sa = SlackAPI('./config/slack.ini')
 
 # 辞書から値がNoneのキーを削除
 # 今回は使わない（Noneの列は消さない！）
