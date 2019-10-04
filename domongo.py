@@ -23,7 +23,7 @@ class MongoAccess(object):
         CONFIG = get_conf(self.inifile_name, sample_json)['CONFIG']
 
         clint = MongoClient()
-        client[db].authenticate(CONFIG['USER'], CONFIG['PASS'])
+        clint[db].authenticate(CONFIG['USER'], CONFIG['PASS'])
         self.db = clint[CONFIG['DB']]
         self.collection = self.db.get_collection(CONFIG['COLLECTION'])
 
