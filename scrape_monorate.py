@@ -255,7 +255,7 @@ def main():
                     while res_is_403 and not res_title_is_None:
                         res_is_None = True
                         while res_is_None:
-                            html, res_is_None = get_html_forsoup(url, driver, "class='product_caution'")
+                            html, res_is_None = get_html_forsoup(url, driver, 'span.product_caution')
                             # dockerだとエラーになるよ！
                             if res_is_None:
                                 driver = create_driver(driver)
