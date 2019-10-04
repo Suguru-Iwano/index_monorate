@@ -3,6 +3,8 @@
 # 検索条件を確認してね！！
 
 from mymodule import get_config_json as get_conf
+from mymodule import print_slack
+
 import domongo
 
 from bs4 import BeautifulSoup # pip3 install bs4
@@ -23,16 +25,7 @@ import traceback
 import os
 
 SCRAPE_VERSION = 'index_monorate(NoDocker)_2.5'
-
-#Slackに出力
-def print_slack(message):
-    webhook_url = 'https://hooks.slack.com/services/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'
-    if isinstance(message, dict):
-        message = json.dumps(message,indent=4,ensure_ascii=False)
-    if isinstance(message, list):
-        message = [json.dumps(m,indent=4,ensure_ascii=False) for m in message]
-    requests.post(webhook_url, data=json.dumps({'text': message}))
-
+webhook_url = 'https://hooks.slack.com/services/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'
 
 # 辞書から値がNoneのキーを削除
 # 今回は使わない（Noneの列は消さない！）
@@ -66,7 +59,7 @@ def create_driver(driver):
     # driver = webdriver.Remote(
     # command_executor='http://selenium-hub:4444/wd/hub',
     # desired_capabilities=DesiredCapabilities.CHROME)
-    print_slack('> driver is started')
+    print_slack('> driver is started', webhook_url)
     print('> driver is started')
     return driver
 
@@ -100,10 +93,8 @@ def get_html_forsoup(url, driver=None):
         res_is_None = False
     except:
         res_is_None = True
-        print_slack('> none ress sleep')
-        print_slack(traceback.format_exc())
-        print('> none ress sleep')
-        print(traceback.format_exc())
+        print_slack('> none ress sleep\n'+ traceback.format_exc(), webhook_url)
+        print('> none ress sleep\n'+ traceback.format_exc(), webhook_url)
         time.sleep(random.random()*4000)
         #time.sleep(2)
 
@@ -150,14 +141,9 @@ def analyze_html(html):
         res_is_403 = True
         res_title_is_None = False
         nextpage_is_exist = True
-        print_slack('> 403 sleep')
+        print_slack('> 403 sleep', webhook_url)
         time.sleep(random.random()*4000)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
-    # if len(soup_1page_list) == 0:
-    #     res_is_403 = True
-    #     print_slack('> 403 sleep')
-    #     time.sleep(random.random()*4000)
-        #time.sleep(2)
 
     # ページ内の商品情報でループ
     for section in soup_1page_list:
@@ -281,15 +267,14 @@ def main():
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
-                print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
-                print(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
+                print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}', webhook_url)
+                print(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}', webhook_url)
                 #move_file(filepath, filename)
-        print_slack('> all done!!')
+        print_slack('> all done!!', webhook_url)
 
     except Exception as e:
         print(traceback.format_exc())
-        print_slack(traceback.format_exc())
-        print(traceback.format_exc())
+        print_slack(traceback.format_exc(), webhook_url)
 
     finally:
         # ブラウザーを終了

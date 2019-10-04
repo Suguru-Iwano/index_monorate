@@ -38,3 +38,12 @@ def get_config_json(filename, sample_json):
         sys.exit(1)
 
     return config_json
+
+# Slackに出力
+def print_slack(message, webhook_url):
+
+    if isinstance(message, dict):
+        message = json.dumps(message,indent=4,ensure_ascii=False)
+    if isinstance(message, list):
+        message = [json.dumps(m,indent=4,ensure_ascii=False) for m in message]
+    requests.post(webhook_url, data=json.dumps({'text': message}))
