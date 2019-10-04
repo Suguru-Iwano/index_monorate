@@ -45,7 +45,7 @@ class SlackAPI(object):
 
     def __init__(self, inifile_name):
         sample_json = {'URL': {'webhook_url': None}}
-        self.webhook_url = get_config_json(self.inifile_name, sample_json)['URL']
+        self.webhook_url = get_config_json(inifile_name, sample_json)['URL']
 
     def print_slack(self, message):
 
