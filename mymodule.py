@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import sys
+import requests
 
 from configparser import SafeConfigParser, MissingSectionHeaderError # pip3 install ConfigParser
 
