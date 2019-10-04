@@ -3,7 +3,7 @@
 # 検索条件を確認してね！！
 
 from mymodule import get_config_json as get_conf
-from mymodule import print_slack
+from mymodule import SlackAPI
 
 import domongo
 
@@ -25,6 +25,7 @@ import traceback
 import os
 
 SCRAPE_VERSION = 'index_monorate(NoDocker)_2.5'
+sa = SlackAPI('./conf/slack.ini')
 
 # 辞書から値がNoneのキーを削除
 # 今回は使わない（Noneの列は消さない！）
@@ -58,7 +59,7 @@ def create_driver(driver):
     # driver = webdriver.Remote(
     # command_executor='http://selenium-hub:4444/wd/hub',
     # desired_capabilities=DesiredCapabilities.CHROME)
-    print_slack('> driver is started')
+    sa.print_slack('> driver is started')
     print('> driver is started')
     return driver
 
@@ -92,7 +93,7 @@ def get_html_forsoup(url, driver=None):
         res_is_None = False
     except:
         res_is_None = True
-        print_slack('> none ress sleep\n'+ traceback.format_exc())
+        sa.print_slack('> none ress sleep\n'+ traceback.format_exc())
         print('> none ress sleep\n'+ traceback.format_exc())
         time.sleep(random.random()*4000)
         #time.sleep(2)
@@ -140,7 +141,7 @@ def analyze_html(html):
         res_is_403 = True
         res_title_is_None = False
         nextpage_is_exist = True
-        print_slack('> 403 sleep')
+        sa.print_slack('> 403 sleep')
         time.sleep(random.random()*4000)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
 
@@ -209,7 +210,7 @@ def analyze_html(html):
 # main
 def main():
     base_url = 'https://mnrate.com/search'
-    
+
     # 全部
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'MusicalInstruments', 'VideoGames', 'Electronics', 'PCHardware', 'Software', 'OfficeProducts', 'Kitchen', 'PetSupplies', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Toys', 'Hobbies', 'Apparel', 'Shoes', 'Jewelry', 'Watches', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     # 規制少ない
@@ -266,14 +267,14 @@ def main():
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
-                print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
+                sa.print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
                 print(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
                 #move_file(filepath, filename)
-        print_slack('> all done!!')
+        sa.print_slack('> all done!!')
 
     except Exception as e:
         print(traceback.format_exc())
-        print_slack(traceback.format_exc())
+        sa.print_slack(traceback.format_exc())
 
     finally:
         # ブラウザーを終了
