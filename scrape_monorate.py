@@ -89,7 +89,7 @@ def make_url_forsearch(base_url, category, rank_range, page_num):
     return url
 
 # HTMLを取得
-def get_html_forsoup(url, driver=None, target_selector):
+def get_html_forsoup(url, driver, target_selector):
     html = None
     res_is_None = True
     try:
