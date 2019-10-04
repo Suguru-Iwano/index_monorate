@@ -97,6 +97,8 @@ def get_html_forsoup(url, driver, target_selector):
         # WebDriverWait(driver, 30).until(
         #     EC.presence_of_element_located((By.CSS_SELECTOR, target_selector))
         # )
+        # Bot認識阻害?
+        time.sleep((random.random())/2+1)
         html = driver.page_source.encode('utf-8')
         res_is_None = False
     except:
@@ -261,8 +263,7 @@ def main():
                                 driver = create_driver(driver)
                         item_infos, nextpage_is_exist, res_is_403, res_title_is_None = analyze_html(html)
                     [mongo.upsert_one(ii) for ii in item_infos]
-                    # Bot認識阻害?
-                    time.sleep((random.random())/2+1)
+
                     if not nextpage_is_exist:
                         break
                 # ファイル保存（今回はMongoDB使う）
