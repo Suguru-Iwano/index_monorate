@@ -94,9 +94,9 @@ def get_html_forsoup(url, driver, target_selector):
     res_is_None = True
     try:
         driver.get(url)
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, target_selector))
-        )
+        # WebDriverWait(driver, 30).until(
+        #     EC.presence_of_element_located((By.CSS_SELECTOR, target_selector))
+        # )
         html = driver.page_source.encode('utf-8')
         res_is_None = False
     except:
