@@ -22,9 +22,9 @@ class MongoAccess(object):
         #               iniファイルの中身が入ったJSONを作成
         CONFIG = get_conf(self.inifile_name, sample_json)['CONFIG']
 
-        clint = MongoClient()
-        clint[db].authenticate(CONFIG['USER'], CONFIG['PASS'])
-        self.db = clint[CONFIG['DB']]
+        client = MongoClient()
+        client.reporting.authenticate(CONFIG['USER'], CONFIG['PASS'])
+        self.db = client[CONFIG['DB']]
         self.collection = self.db.get_collection(CONFIG['COLLECTION'])
 
     # findするぜ！
