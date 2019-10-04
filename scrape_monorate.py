@@ -9,7 +9,10 @@ import domongo
 
 from bs4 import BeautifulSoup # pip3 install bs4
 from selenium import webdriver # pip3 install selenium
-#from selenium.webdriver.chrome.options import Options # 同上
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from selenium.webdriver import Firefox, FirefoxOptions
 #from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #import chromedriver_binary # pip3 install chromedriver_binary
@@ -51,8 +54,13 @@ def create_driver(driver):
     # driver = webdriver.Chrome(options=options)
 
     # Firefox用
-    options = FirefoxOptions()
-    options.add_argument('-headless')
+    options = Options()
+    options.add_argument("--disable-gpu");
+    options.add_argument("--disable-extensions");
+    options.add_argument("--proxy-server='direct://'");
+    options.add_argument("--proxy-bypass-list=*");
+    options.add_argument("--start-maximized");
+    options.add_argument("--headless");
     driver = Firefox(options=options, log_path=os.path.devnull)
 
     # Docker用
@@ -81,15 +89,15 @@ def make_url_forsearch(base_url, category, rank_range, page_num):
     return url
 
 # HTMLを取得
-def get_html_forsoup(url, driver=None):
+def get_html_forsoup(url, driver=None, target_selector):
     html = None
     res_is_None = True
     try:
-        if driver is None:
-            html = requests.get(url)
-        else:
-            driver.get(url)
-            html = driver.page_source.encode('utf-8')
+        driver.get(url)
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, target_selector))
+        )
+        html = driver.page_source.encode('utf-8')
         res_is_None = False
     except:
         res_is_None = True
@@ -247,7 +255,7 @@ def main():
                     while res_is_403 and not res_title_is_None:
                         res_is_None = True
                         while res_is_None:
-                            html, res_is_None = get_html_forsoup(url, driver)
+                            html, res_is_None = get_html_forsoup(url, driver, "class='product_caution'"")
                             # dockerだとエラーになるよ！
                             if res_is_None:
                                 driver = create_driver(driver)
