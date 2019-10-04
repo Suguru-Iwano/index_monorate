@@ -54,7 +54,7 @@ def create_driver(driver):
     # driver = webdriver.Chrome(options=options)
 
     # Firefox用
-    options = Options()
+    options = FirefoxOptions()
     options.add_argument("--disable-gpu");
     options.add_argument("--disable-extensions");
     options.add_argument("--proxy-server='direct://'");
