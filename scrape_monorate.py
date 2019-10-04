@@ -260,7 +260,7 @@ def main():
                             if res_is_None:
                                 driver = create_driver(driver)
                         item_infos, nextpage_is_exist, res_is_403, res_title_is_None = analyze_html(html)
-                    [item_info_list.append(ii) for ii in item_infos]
+                    [mongo.upsert_one(ii) for ii in item_infos]
                     # Bot認識阻害?
                     time.sleep((random.random())/2+1)
                     if not nextpage_is_exist:
@@ -271,7 +271,6 @@ def main():
                 # filename = f'{category}_{h}.json'
                 # with open(f'{filepath}{filename}','w', encoding = 'utf_8') as file:
                 #     [json.dump(ii,file,indent=4,ensure_ascii=False) for ii in item_info_list]
-                [mongo.upsert_one(ii) for ii in item_info_list]
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
