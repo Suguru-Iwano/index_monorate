@@ -41,7 +41,7 @@ def get_config_json(filename, sample_json):
     return config_json
 
 # Slackに出力
-class SlackAPI(object, inifile_name):
+class SlackAPI(object):
 
     def __init__(self, inifile_name):
         sample_json = {'URL': {'webhook_url': None}}
