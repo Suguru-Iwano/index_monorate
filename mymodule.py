@@ -59,7 +59,7 @@ class SlackAPI(object):
         print(message)
 
         okflg = False
-        while !(okflg):
+        while not okflg:
             try:
                 requests.post(self.webhook_url, data=json.dumps({'text': message}))
             except:
