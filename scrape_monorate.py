@@ -4,8 +4,7 @@
 
 from mymodule import get_config_json as get_conf
 from mymodule import SlackAPI
-
-import domongo
+import wrapmongo
 
 from bs4 import BeautifulSoup # pip3 install bs4
 from selenium import webdriver # pip3 install selenium
@@ -14,8 +13,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Firefox, FirefoxOptions
-#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-#import chromedriver_binary # pip3 install chromedriver_binary
 from urllib import request, parse # 組み込み
 import requests # pip3 install requests
 import json # 組み込み
@@ -67,7 +64,7 @@ def create_driver(driver):
     # driver = webdriver.Remote(
     # command_executor='http://selenium-hub:4444/wd/hub',
     # desired_capabilities=DesiredCapabilities.CHROME)
-    sa.print_slack('> driver is started')
+    sa.write_log('> driver is started')
     print('> driver is started')
     return driver
 
@@ -103,7 +100,7 @@ def get_html_forsoup(url, driver, target_selector):
         res_is_None = False
     except:
         res_is_None = True
-        sa.print_slack('> none ress sleep\n'+ traceback.format_exc())
+        sa.write_log('> none ress sleep\n'+ traceback.format_exc())
         print('> none ress sleep\n'+ traceback.format_exc())
         time.sleep(random.random()*4000)
         #time.sleep(2)
@@ -151,7 +148,7 @@ def analyze_html(html):
         res_is_403 = True
         res_title_is_None = False
         nextpage_is_exist = True
-        sa.print_slack('> 403 sleep')
+        sa.write_log('> 403 sleep')
         time.sleep(random.random()*4000)
         return item_infos, nextpage_is_exist, res_is_403, res_title_is_None
 
@@ -228,7 +225,7 @@ def main():
     # 規制多い
     #item_categories = ['Books', 'ForeignBooks', 'DVD', 'Music', 'Kitchen', 'Grocery', 'HealthPersonalCare', 'Beauty', 'Baby', 'Shoes', 'Jewelry', 'Watches']
     # 今回
-    item_categories = ['PCHardware', 'Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
+    item_categories = ['Software', 'OfficeProducts', 'PetSupplies', 'Toys', 'Hobbies', 'Apparel', 'SportingGoods', 'HomeImprovement', 'Automotive', 'Appliances']
     max_rank_num = 80000
     #rank_roop_num = 200
     rank_roop_num = 40
@@ -275,14 +272,14 @@ def main():
 
                 rank_range['min'] = rank_range['max']+1 #前回のminと被らないように+1する
                 rank_range['max'] += rank_roop_num
-                sa.print_slack(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
+                sa.write_log(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
                 print(f'【{category}】:{h}/{int(max_rank_num/rank_roop_num)}')
                 #move_file(filepath, filename)
-        sa.print_slack('> all done!!')
+        sa.write_log('> all done!!')
 
     except Exception as e:
         print(traceback.format_exc())
-        sa.print_slack(traceback.format_exc())
+        sa.write_log(traceback.format_exc())
 
     finally:
         # ブラウザーを終了

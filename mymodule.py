@@ -50,10 +50,19 @@ class SlackAPI(object):
         config_json = get_config_json(inifile_name, sample_json)
         self.webhook_url = config_json['URL']['webhook_url']
 
-    def print_slack(self, message):
+    def write_log(self, message):
 
         if isinstance(message, dict):
             message = json.dumps(message,indent=4,ensure_ascii=False)
         if isinstance(message, list):
             message = [json.dumps(m,indent=4,ensure_ascii=False) for m in message]
-        requests.post(self.webhook_url, data=json.dumps({'text': message}))
+        print(message)
+
+        okflg = False
+        while !(okflg):
+            try:
+                requests.post(self.webhook_url, data=json.dumps({'text': message}))
+            except:
+                time.sleep(5)
+            else:
+                okflg = True
