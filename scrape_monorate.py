@@ -234,7 +234,7 @@ def main():
 
     try:
         driver = create_driver(driver)
-        mongo = domongo.MongoAccess()
+        mongo = wrapmongo.MongoAccess()
 
         for category in item_categories:
             rank_range = {
