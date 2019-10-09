@@ -1,3 +1,5 @@
 *.ini
 result/
 config/
+__pycache__/
+.ftpconfig

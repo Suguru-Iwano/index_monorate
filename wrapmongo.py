@@ -19,16 +19,16 @@ class MongoAccess(object):
             }
         }
         # get_conf:　iniファイル名とJSONの雛形から
-        #               iniファイルの中身が入ったJSONを作成
+        #            iniファイルの中身が入ったJSONを作成
         CONFIG = get_conf(self.inifile_name, sample_json)['CONFIG']
 
         client = MongoClient(username = CONFIG['USER'], password = CONFIG['PASS'])
         self.db = client[CONFIG['DB']]
         self.collection = self.db.get_collection(CONFIG['COLLECTION'])
-
+ 
     # findするぜ！
-    def find(self):
-        pass
+    def find(self, projection=None, filter=None, sort=None):
+        return self.collection.find(projection=projection,filter=filter,sort=sort)
 
     # upsertするぜ！
     def upsert_one(self, post):
